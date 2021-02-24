@@ -17,6 +17,13 @@
             </li>
         {% endfor %}
         <a href="./add">add</a>
+
+
+        {% if messages %}
+          {% for message in messages %}
+            {{message}}
+          {% endfor %}
+        {% endif %}
     </ul>
 
 </body>
