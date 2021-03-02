@@ -1,25 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'myapp2/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>myapp2</title>
-</head>
 
-<body>
-    {% for students in students_list %}
-    <p>
-        <img src="images/{{students.image}}" >
-        <a href="./student/{{students.id}}">
-            {{students.name}}
-        </a>
-        <a href="./update/{{students.id}}">update</a>
-        <a href="./delete/{{students.id}}">Delete</a>
-    </p>
-    {% endfor %}
-    <a href="./add">add</a>
-</body>
+{% block body %}
 
-</html>
+<input type="text" name="" id="searchField" onKeyPress="search()" />
+
+<table border="1">
+    <th>
+    <td>
+        name
+    </td>
+    <td>
+        last_name
+    </td>
+    <td>
+        image
+    </td>
+    <td>
+        fname
+    </td>
+    <td>
+        email
+    </td>
+    <td>
+        date of birth
+    </td>
+    </th>
+    <tbody id="tbl">
+
+    </tbody>
+</table>
+
+<script>
+
+    let searchField = document.getElementById('searchField');
+
+    const search = async () => {
+        let data = await fetch(`/search/?text=${searchField.value}`)
+        data = await data.json()
+        data = JSON.parse(data.data)
+        console.log(data)
+        insert(data)
+    }
+    function insert(data) {
+        let el = document.getElementById('tbl')
+        el.innerHTML = ""
+        if (data) {
+            for (let i = 0; i < data.length; i++) {
+                el.innerHTML += `<tr onClick='window.open("student/${data[i].pk}")'>
+            <td><img src='images/${data[i].fields.image}' /></td>
+            <td>${data[i].fields.name}</td>
+            <td>${data[i].fields.fname}</td>
+            <td>${data[i].fields.last_name}</td>
+            <td>${data[i].fields.email}</td>
+            <td>${data[i].fields.date_of_birth}</td>
+            </tr>
+            `
+            }
+        }
+    }
+</script>
+
+{% for students in students_list %}
+<p>
+    <img src="images/{{students.image}}">
+    <a href="./student/{{students.id}}">
+        {{students.name}}
+    </a>
+    <a href="./update/{{students.id}}">update</a>
+    <a href="./delete/{{students.id}}">Delete</a>
+</p>
+{% endfor %}
+<a href="./add">add</a>
+
+{% endblock %}

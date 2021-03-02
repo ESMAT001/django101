@@ -1,0 +1,66 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/tailwind.min.css' %}">
+</head>
+<style>
+    input {
+        width: 100% !important;
+        padding: 0.5rem  !important;
+        font-weight: 600 !important;
+        border-bottom-width: 2px;
+        border-radius: .25rem;
+        border-color: rgba(52,211,153)
+    }
+</style>
+
+<body>
+    <div class="p-10 flex justify-center items-center bg-gradient-to-tr from-green-400 to-green-500">
+        <form method="post" class="bg-white py-6 px-10 flex flex-col space-y-6 ">
+
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+            <ul>
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% for field in form.visible_fields %}
+            <div class="flex flex-col space-y-1">
+                <div class="text-green-500 font-semibold " >{{ field.label_tag }}</div>
+                <div>
+                    {% if field.errors %}
+                    <div class="text-sm text-red-400 text-semibold">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="">
+                        {{ field }}
+                    </div>
+
+                    {% if field.help_text %}
+                    <div class="text-sm  text-gray-600 text-opacity-80" >
+                        {{ field.help_text }}
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+            {% endfor %}
+            <button type="submit" class="bg-green-500 text-lg w-2/4 mx-auto text-white font-semibold  py-2 focus:outline-none hover:bg-green-400 transition duration-300 shadow">save</button>
+            <p class="text-sm text-gray-700 text-opacity-80 text-center " >Already have an account <span><a href="/login-user/" class="text-green-500" >login</a></span></p>
+        </form>
+    </div>
+</body>
+
+</html>

@@ -1,12 +1,30 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login</title>
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/tailwind.min.css' %}">
 </head>
+
 <body>
-    login
+    <div class="w-screen h-screen flex justify-center items-center bg-gradient-to-tr from-green-400 to-green-500">
+        <div>
+            {{invalid}}
+            <form method="POST" class="flex flex-col space-y-8 rounded p-14 shadow-xl bg-white text-center">
+                <p class="text-xl font-semibold text-green-500" >Login to your account</p>
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Username" class="p-2 text-gray-700 font-semibold border-b-2 border-green-400 focus:outline-none focus:border-0 focus:ring-2 focus:ring-green-400 rounded transition duration-300 ">
+                <input type="password" name="password" placeholder="Password" class="p-2 text-gray-700 border-b-2 border-green-400 focus:outline-none focus:border-b-0 focus:ring-2 focus:ring-green-400 rounded transition duration-300 ">
+                <button type="submit" class="bg-green-500 text-white font-semibold  py-2 focus:outline-none hover:bg-green-400 transition duration-300 shadow" >Login</button>
+                <p class="text-sm text-gray-700 text-opacity-80" >Dont have an account <span><a href="/register/" class="text-green-500" >register</a></span></p>
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>

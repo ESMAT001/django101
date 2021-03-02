@@ -1,0 +1,36 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/tailwind.min.css' %}">
+    <style>
+        input {
+            width: 100% ;
+            padding: 0.5rem  ;
+            font-weight: 600 ;
+            border-bottom-width: 2px;
+            border-radius: .25rem;
+            border-color: rgba(52,211,153)
+        }
+    </style>
+</head>
+<body>
+    <nav class="bg-blue-500 flex justify-between px-10 py-4 text-white items-center ">
+        <div>
+            <h2 class="font-semibold text-xl ">
+                Students App
+            </h2>
+        </div>
+        <a href="{% url 'logout' %}" class="bg-red-500 p-2 rounded focus:outline none border-0 shadow-lg font-bold hover:bg-red-600" >logout</a>
+    </nav>
+    
+    {% block body %}
+
+    {% endblock %}
+</body>
+</html>
