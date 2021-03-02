@@ -3,19 +3,19 @@ from django.db import models
 
 def overwrite(instance,filename):
     
-    newfile=f'user_{instance.id}/temp.{filename.split(".")[-1]}'
+    newfile=f'student_{instance.id}/image.{filename.split(".")[-1]}'
     return newfile
 # Create your models here.
-class students(models.Model):
+class Students(models.Model):
    
     
-    id = models.UUIDField(primary_key=True,default=uuid4,editable=False)
+    id = models.UUIDField(primary_key=True,default=uuid4,editable=True)
     name=models.CharField(max_length=200,null=False,blank=False)
     fname=models.CharField(max_length=200,null=False,blank=False)
     last_name=models.CharField(max_length=200,null=False,blank=False)
     date_of_birth=models.DateField(auto_now=False)
     email=models.EmailField(max_length=254,null=False,blank=False)
-    image=models.FileField(upload_to=overwrite)
+    image=models.FileField(upload_to=overwrite,blank=True)
     created_at=models.DateTimeField(auto_now=True)
 
 

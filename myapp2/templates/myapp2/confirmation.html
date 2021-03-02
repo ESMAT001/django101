@@ -4,17 +4,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
+    <title>Document</title>
 </head>
 <body>
-    
-    {{title}}
     {{not_found}}
-    {% if form %}
-    <form   method="post" enctype="multipart/form-data">
+    {% if not not_found %}
+    <form method="post">
         {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit" >Save</button>
+
+        <button type="submit" >Confirm</button>
+        <a href="../">cancel</a>
     </form>
     {% endif %}
 </body>

@@ -4,18 +4,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{title}}</title>
+    <title>Document</title>
 </head>
 <body>
-    
-    {{title}}
     {{not_found}}
-    {% if form %}
-    <form   method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit" >Save</button>
-    </form>
-    {% endif %}
+    {{ student_info.name }}
+    <a href="../update/{{student_info.id}}">update</a>
+    <a href="../delete/{{student_info.id}}">Delete</a>
 </body>
 </html>
