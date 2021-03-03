@@ -3,74 +3,182 @@
 
 {% block body %}
 
-<input type="text" name="" id="searchField" onKeyPress="search()" />
+<div class="flex flex-col pb-10">
+    <div class="w-100 flex justify-between items-center px-16 pt-10">
+        <input type="text" name="" placeholder="Search" id="searchField" onKeyUp="search()"
+            class="w-1/4 border-2 p-3 shadow focus:shadow-lg transition duration-300 " />
+        <a href="./add"
+            class="bg-blue-400 py-2 px-4 text-white font-semibold rounded shadow focus:outline-none hover:bg-blue-500 transition duration-300">Add
+            student</a>
+    </div>
 
-<table border="1">
-    <th>
-    <td>
-        name
-    </td>
-    <td>
-        last_name
-    </td>
-    <td>
-        image
-    </td>
-    <td>
-        fname
-    </td>
-    <td>
-        email
-    </td>
-    <td>
-        date of birth
-    </td>
-    </th>
-    <tbody id="tbl">
+    <table
+        class="table-fixed overflow-scroll  lg:table-auto w-11/12 mx-auto mt-10 shadow border-2 border-green-400 py-10 text-center">
+        <thead class="">
+            <tr class="grid grid-cols-9 py-6 border-b-2 bg-green-400 text-white font-semibold ">
+                <td class="">
+                    Image
+                </td>
+                <td class="">
+                    Name
+                </td>
+                <td class="">
+                    Fname
+                </td>
+                <td class="">
+                    Lastname
+                </td>
+                <td class="">
+                    Date of birth
+                </td>
+                <td class="col-span-2">
+                    Email
+                </td>
+                <td class="">Update</td>
+                <td class="">Delete</td>
+            </tr>
+        </thead>
+        <tbody id="originalTbl" class="">
+            {% for students in students_list %}
+            <tr class="grid grid-cols-9 justify-items-center place-items-center px-2 py-4 border-b-2 border-green-400 cursor-pointer hover:bg-green-100 transition duration-200"
+                onclick="window.open('./student/{{students.id}}')">
+                <td>
+                    <img src="images/{{students.image}}" class="">
+                </td>
+                <td>
+                    <p class="text-gray-700 font-semibold capitalize">
+                        {{students.name}}
+                    </p>
+                </td>
+                <td>
+                    <p class="text-gray-700 font-semibold capitalize">
+                        {{students.fname}}
+                    </p>
+                </td>
+                <td>
+                    <p class="text-gray-700 font-semibold capitalize">
+                        {{students.last_name}}
+                    </p>
+                </td>
+                <td>
+                    <p class="text-gray-700 font-semibold capitalize">
+                        {{students.date_of_birth}}
+                    </p>
+                </td>
+                <td class="col-span-2">
+                    <p class="text-gray-700 font-semibold ">
+                        {{students.email}}
+                    </p>
+                </td>
+                <td><a href="./update/{{students.id}}"
+                        class="p-3 bg-blue-400 text-white rounded shadow font-semibold hover:bg-blue-500 hover:shadow-lg transition duration-300 btn">update</a>
+                </td>
+                <td> <a href="./delete/{{students.id}}"
+                        class="p-3 bg-red-400 text-white rounded shadow font-semibold hover:bg-red-500 hover:shadow-lg transition duration-300 btn">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tbody id="searchTbl" class="hidden">
 
-    </tbody>
-</table>
+        </tbody>
+    </table>
+    <div class="mx-auto w-1/5 flex justify-evenly items-center mt-4 text-center">
+        {% if students_list.has_previous %}
+        <a href="?page=1" class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300  ">&laquo; first</a>
+        <a href="?page={{ students_list.previous_page_number }}" class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300">previous</a>
+        {% endif %}
 
+        <span class="bg-green-400 py-2 px-3 text-white font-semibold">
+            Page {{ students_list.number }} of {{ students_list.paginator.num_pages }}
+        </span>
+
+        {% if students_list.has_next %}
+        <a href="?page={{ students_list.next_page_number }}" class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300">next</a>
+        <a href="?page={{ students_list.paginator.num_pages }}" class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300">last &raquo;</a>
+        {% endif %}
+    </div>
+
+
+</div>
 <script>
+    const fn = e => {
+        e.stopPropagation()
+    }
+    let update = document.getElementsByClassName("btn");
+
+    for (let i = 0; i < update.length; i++) {
+        update[i].addEventListener('click', fn)
+    }
+
+
+
 
     let searchField = document.getElementById('searchField');
-
+    let originalTbl = document.getElementById('originalTbl');
+    let searchTbl = document.getElementById('searchTbl')
     const search = async () => {
-        let data = await fetch(`/search/?text=${searchField.value}`)
-        data = await data.json()
-        data = JSON.parse(data.data)
-        console.log(data)
-        insert(data)
+        if (searchField.value) {
+            originalTbl.classList.add('hidden');
+            searchTbl.classList.remove('hidden');
+
+            let data = await fetch(`/search/?text=${searchField.value}`)
+            data = await data.json()
+            data = JSON.parse(data.data)
+            console.log(data)
+            insert(data)
+        } else {
+            originalTbl.classList.remove('hidden');
+            searchTbl.classList.add('hidden');
+        }
     }
     function insert(data) {
-        let el = document.getElementById('tbl')
-        el.innerHTML = ""
-        if (data) {
+        searchTbl.innerHTML = ""
+        if (data.length > 0) {
             for (let i = 0; i < data.length; i++) {
-                el.innerHTML += `<tr onClick='window.open("student/${data[i].pk}")'>
-            <td><img src='images/${data[i].fields.image}' /></td>
-            <td>${data[i].fields.name}</td>
-            <td>${data[i].fields.fname}</td>
-            <td>${data[i].fields.last_name}</td>
-            <td>${data[i].fields.email}</td>
-            <td>${data[i].fields.date_of_birth}</td>
-            </tr>
-            `
+                let html = ` <tr class="grid grid-cols-9 justify-items-center place-items-center px-2 py-4 border-b-2 border-green-400 cursor-pointer hover:bg-green-100 transition duration-200"
+                onclick="window.open('./student/${data[i].pk}')">
+                <td>
+                    <img src="images/${data[i].fields.image}" class="">
+                </td>
+                <td>
+                    <p class="text-gray-700 font-semibold capitalize">
+                        ${data[i].fields.name}
+                    </p>
+                </td>
+                <td>
+                    <p class="text-gray-700 font-semibold capitalize">
+                        ${data[i].fields.fname}
+                    </p>
+                </td>
+                <td>
+                    <p class="text-gray-700 font-semibold capitalize">
+                        ${data[i].fields.last_name}
+                    </p>
+                </td>
+                <td>
+                    <p class="text-gray-700 font-semibold capitalize">
+                        ${data[i].fields.date_of_birth}
+                    </p>
+                </td>
+                <td class="col-span-2">
+                    <p class="text-gray-700 font-semibold ">
+                        ${data[i].fields.email}
+                    </p>
+                </td>
+                <td><a href="./update/{{students.id}}"
+                        class="p-3 bg-blue-400 text-white rounded shadow font-semibold hover:bg-blue-500 hover:shadow-lg transition duration-300 btn">update</a>
+                </td>
+                <td> <a href="./delete/{{students.id}}"
+                        class="p-3 bg-red-400 text-white rounded shadow font-semibold hover:bg-red-500 hover:shadow-lg transition duration-300 btn">Delete</a>
+                </td>
+            </tr>`;
+                searchTbl.innerHTML += html;
             }
+        } else {
+            searchTbl.innerHTML = '<tr><td class="col-span-full text-lg font-semibold py-10 ">Student not found!</td></tr>';
         }
     }
 </script>
-
-{% for students in students_list %}
-<p>
-    <img src="images/{{students.image}}">
-    <a href="./student/{{students.id}}">
-        {{students.name}}
-    </a>
-    <a href="./update/{{students.id}}">update</a>
-    <a href="./delete/{{students.id}}">Delete</a>
-</p>
-{% endfor %}
-<a href="./add">add</a>
 
 {% endblock %}

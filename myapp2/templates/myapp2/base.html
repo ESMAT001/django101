@@ -15,18 +15,19 @@
             font-weight: 600 ;
             border-bottom-width: 2px;
             border-radius: .25rem;
-            border-color: rgba(52,211,153)
+            border-color: rgba(52,211,153);
+            outline: none;
         }
     </style>
 </head>
 <body>
-    <nav class="bg-blue-500 flex justify-between px-10 py-4 text-white items-center ">
+    <nav class="bg-green-500 flex justify-between px-10 py-4 text-white items-center shadow-lg">
         <div>
             <h2 class="font-semibold text-xl ">
-                Students App
+                <a href="/">Students App</a>
             </h2>
         </div>
-        <a href="{% url 'logout' %}" class="bg-red-500 p-2 rounded focus:outline none border-0 shadow-lg font-bold hover:bg-red-600" >logout</a>
+        <a href="{% url 'logout' %}" class="bg-red-500 text-sm py-2 px-3 rounded focus:outline none border-0 shadow hover:shadow-lg font-bold hover:bg-red-600 transition duration-300" >logout</a>
     </nav>
     
     {% block body %}

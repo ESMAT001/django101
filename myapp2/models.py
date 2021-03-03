@@ -14,9 +14,15 @@ class Students(models.Model):
     fname=models.CharField(max_length=200,null=False,blank=False)
     last_name=models.CharField(max_length=200,null=False,blank=False)
     date_of_birth=models.DateField(auto_now=False)
-    email=models.EmailField(max_length=254,null=False,blank=False)
-    image=models.FileField(upload_to=overwrite,blank=True)
+    email=models.EmailField(max_length=254,null=False,blank=False,unique=True)
+    image=models.ImageField(upload_to=overwrite,blank=True )
     created_at=models.DateTimeField(auto_now=True)
+
+    def delete(self):
+        img=self.image.name
+        self.image.storage.delete(img)
+        self.image.storage.delete(img.split('/')[0])
+        super().delete()
 
 
     class Meta:

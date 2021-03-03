@@ -5,6 +5,7 @@ from .forms import StudentForm, UserRegisterForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate , login,logout
 from django.core import serializers
+from django.core.paginator import Paginator
 # Create your views here.
 login_url='login-user/'
 
@@ -21,6 +22,11 @@ def search(request):
 @login_required(login_url=login_url)
 def AllStudentsView(request):
     students_list=Students.objects.all()
+
+    pagenation=Paginator(students_list,3)
+
+    students_list=pagenation.get_page(request.GET.get('page'))
+    # print(students_list[0].image)
     return render(request,'myapp2/index.html',{'students_list':students_list,
     'request':request})
 
@@ -41,6 +47,7 @@ def Student(request,id):
 
 @login_required(login_url=login_url)
 def AddStudent(request):
+    # print(request.FILES)
     if request.method == "POST":
         form = StudentForm(request.POST,request.FILES)
         if form.is_valid():
@@ -95,7 +102,7 @@ def UserLogin(request):
         return redirect('../')
     context={}
     if request.method == "POST":
-        print(request.POST)
+    
         user=authenticate(request,
                 username=request.POST['username'],
                 password=request.POST['password'])
@@ -129,5 +136,5 @@ def user_register(request):
         if form.is_valid():
             form.save()
             return redirect('../')
-    print(dir(form))
+    # print(dir(form))
     return render(request,'myapp2/register.html',{'form':form})
