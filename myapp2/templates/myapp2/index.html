@@ -83,10 +83,13 @@
 
         </tbody>
     </table>
-    <div class="mx-auto w-1/5 flex justify-evenly items-center mt-4 text-center">
+    <div class="mx-auto flex justify-evenly items-center mt-4 text-center" id="pagenation">
         {% if students_list.has_previous %}
-        <a href="?page=1" class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300  ">&laquo; first</a>
-        <a href="?page={{ students_list.previous_page_number }}" class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300">previous</a>
+        <a href="?page=1"
+            class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300  ">&laquo;
+            first</a>
+        <a href="?page={{ students_list.previous_page_number }}"
+            class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300">previous</a>
         {% endif %}
 
         <span class="bg-green-400 py-2 px-3 text-white font-semibold">
@@ -94,9 +97,15 @@
         </span>
 
         {% if students_list.has_next %}
-        <a href="?page={{ students_list.next_page_number }}" class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300">next</a>
-        <a href="?page={{ students_list.paginator.num_pages }}" class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300">last &raquo;</a>
+        <a href="?page={{ students_list.next_page_number }}"
+            class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300">next</a>
+        <a href="?page={{ students_list.paginator.num_pages }}"
+            class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300">last
+            &raquo;</a>
         {% endif %}
+    </div>
+    <div class="mx-auto  flex justify-evenly items-center mt-4 text-center hidden" id="searchPagenation">
+        
     </div>
 
 
@@ -116,23 +125,31 @@
 
     let searchField = document.getElementById('searchField');
     let originalTbl = document.getElementById('originalTbl');
-    let searchTbl = document.getElementById('searchTbl')
-    const search = async () => {
-        if (searchField.value) {
+    let searchTbl = document.getElementById('searchTbl');
+    let pagenation = document.getElementById('pagenation');
+    let searchPagenation = document.getElementById('searchPagenation');
+    const search = async (page=1) => {
+        let val = searchField.value.trim()
+        if (val) {
             originalTbl.classList.add('hidden');
             searchTbl.classList.remove('hidden');
-
-            let data = await fetch(`/search/?text=${searchField.value}`)
+            pagenation.classList.add('hidden');
+            let data = await fetch(`/search/?text=${val}&page=${page}`)
             data = await data.json()
+            p = data.pagenation
+            console.log(p)
             data = JSON.parse(data.data)
             console.log(data)
-            insert(data)
+            insert(data, p)
         } else {
             originalTbl.classList.remove('hidden');
             searchTbl.classList.add('hidden');
+            pagenation.classList.remove('hidden');
+            searchPagenation.classList.add('hidden');
         }
     }
-    function insert(data) {
+    function insert(data, p) {
+        console.log(p)
         searchTbl.innerHTML = ""
         if (data.length > 0) {
             for (let i = 0; i < data.length; i++) {
@@ -174,9 +191,35 @@
                 </td>
             </tr>`;
                 searchTbl.innerHTML += html;
+                searchPagenation.innerHTML=''
+                if (p.has_previous) {
+                    searchPagenation.innerHTML += `
+                    <button
+                        class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300 " onclick="search(1)" >&laquo;
+                        first</button>
+                    <button
+                        class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300"  onclick="search(${p.previous_page_number})">previous</button>`
+                }
+
+                searchPagenation.innerHTML += `<span class="bg-green-400 py-2 px-3 text-white font-semibold" >
+                        Page ${p.number} of ${p.num_pages}
+                    </span>`;
+
+                if (p.has_next) {
+                    searchPagenation.innerHTML += ` <button 
+                        class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300" onclick="search(${p.next_page_number})">next</button>
+                    <button 
+                        class="bg-green-400 py-2 px-3 text-white font-semibold shadow hover:bg-green-500 hover:shadow-lg transition duration-300" onclick="search(${p.num_pages})">last
+                        &raquo;</button>`;
+                }
+                searchPagenation.classList.remove('hidden')
+
+
+
             }
         } else {
             searchTbl.innerHTML = '<tr><td class="col-span-full text-lg font-semibold py-10 ">Student not found!</td></tr>';
+            searchPagenation.classList.add('hidden');
         }
     }
 </script>

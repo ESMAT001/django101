@@ -12,18 +12,47 @@ login_url='login-user/'
 
 @login_required(login_url=login_url)
 def search(request):
-    text=request.GET['text']
+    text=request.GET.get('text')
+    page=request.GET.get('page')
     student_list=Students.objects.filter(name__icontains=text)
+    p=None
+    if student_list:
+        pagenation=Paginator(student_list,4)
+        student_list=pagenation.get_page(page)
+        end=student_list.has_previous()
+        s=student_list
+        p={
+            "has_previous":student_list.has_previous(),
+            'has_next':student_list.has_next(),
+            'start_index':student_list.start_index(),
+            'num_pages':student_list.paginator.num_pages,
+            'number':student_list.number
+        }
+        if p['has_previous']:
+            p.update({
+                'previous_page':student_list.previous_page_number(),
+                'previous_page_number':student_list.previous_page_number()
+            })
+        
+        if p['has_next']:
+            p.update({
+                'next_page':student_list.next_page_number(),
+                'next_page_number' :student_list.next_page_number()
+            })
+
+
+    # print((s.next_page_number()))
+    # print(p)
     student_list=serializers.serialize('json',student_list)
     
-    return JsonResponse({'data':student_list})
+    return JsonResponse({'data':student_list,'pagenation':p if p else {} })
 
 
 @login_required(login_url=login_url)
 def AllStudentsView(request):
     students_list=Students.objects.all()
 
-    pagenation=Paginator(students_list,3)
+    pagenation=Paginator(students_list,4)
 
     students_list=pagenation.get_page(request.GET.get('page'))
     # print(students_list[0].image)
@@ -50,14 +79,14 @@ def AddStudent(request):
     # print(request.FILES)
     if request.method == "POST":
         form = StudentForm(request.POST,request.FILES)
+        print(request.POST)
         if form.is_valid():
             form.save()
             return redirect('../')
     else:
         form =StudentForm()
     context={
-        'form':form,
-        'title':"AddStudent"
+        'form':form
     }
     return render(request,'myapp2/add_student.html',context)
 
@@ -97,7 +126,6 @@ def DeleteStudent(request,id):
 
 
 def UserLogin(request):
-    print()
     if str(request.user) != 'AnonymousUser':
         return redirect('../')
     context={}
