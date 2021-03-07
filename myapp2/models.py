@@ -27,3 +27,26 @@ class Students(models.Model):
 
     class Meta:
         ordering=['created_at']
+
+
+class City(models.Model):
+    name = models.CharField(max_length=200)
+
+class Person(models.Model):
+    hometown = models.ForeignKey(
+        City, 
+        on_delete = models.SET_NULL,
+        blank=True,
+        null = True
+    )
+
+    def __str__(self):
+        return f"Person: city: {self.hometown.name}"
+
+
+class Book(models.Model):
+    author = models.ForeignKey(Person, on_delete = models.CASCADE)
+
+
+class Cover(models.Model):
+    name = models.OneToOneField(Book, on_delete=models.CASCADE)

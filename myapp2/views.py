@@ -95,7 +95,7 @@ def UpdateStudent(request,id):
     print(request.FILES)
     try:
         data=Students.objects.get(id=id)
-        form = StudentForm(request.POST or None,request.FILES or None,instance=data)
+        form = StudentForm(request.POST or None, request.FILES or None ,  instance=data)
         if form.is_valid():
             form.save()
             return redirect('../')
@@ -126,7 +126,8 @@ def DeleteStudent(request,id):
 
 
 def UserLogin(request):
-    if str(request.user) != 'AnonymousUser':
+    # print(request.user.is_anonymous)
+    if not request.user.is_anonymous:
         return redirect('../')
     context={}
     if request.method == "POST":
@@ -155,7 +156,7 @@ def logoutUser(request):
 
 
 def user_register(request):
-    if str(request.user) != 'AnonymousUser':
+    if not request.user.is_anonymous:
         return redirect('../')
     form=UserRegisterForm()
 

@@ -4,16 +4,16 @@
 {% block body %}
 
 <div class="flex flex-col pb-10">
-    <div class="w-100 flex justify-between items-center px-16 pt-10">
+    <div class="w-100 flex flex-col md:flex-row space-y-6 justify-between items-center px-16 pt-10">
         <input type="text" name="" placeholder="Search" id="searchField" onKeyUp="search()"
-            class="w-1/4 border-2 p-3 shadow focus:shadow-lg transition duration-300 " />
+            class="md:w-1/4 border-2 px-3 shadow focus:shadow-lg transition duration-300 " />
         <a href="./add"
             class="bg-blue-400 py-2 px-4 text-white font-semibold rounded shadow focus:outline-none hover:bg-blue-500 transition duration-300">Add
             student</a>
     </div>
-
+<div class="w-full shadow-lg overflow-x-scroll" ></div>
     <table
-        class="table-fixed overflow-scroll  lg:table-auto w-11/12 mx-auto mt-10 shadow border-2 border-green-400 py-10 text-center">
+        class="table-fixed min-w-full overflow-scroll lg:table-auto lg:min-w-0 w-11/12 mx-auto mt-10 shadow border-2 border-green-400 py-10 text-center">
         <thead class="">
             <tr class="grid grid-cols-9 py-6 border-b-2 bg-green-400 text-white font-semibold ">
                 <td class="">
@@ -105,7 +105,6 @@
         {% endif %}
     </div>
     <div class="mx-auto  flex justify-evenly items-center mt-4 text-center hidden" id="searchPagenation">
-        
     </div>
 
 
