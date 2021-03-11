@@ -49,7 +49,7 @@ def search(request):
 
 
 @login_required(login_url=login_url)
-def AllStudentsView(request):
+def all_students_view(request):
     students_list=Students.objects.all()
 
     pagenation=Paginator(students_list,4)
@@ -61,7 +61,7 @@ def AllStudentsView(request):
 
 
 @login_required(login_url="../"+login_url)
-def Student(request,id):
+def student(request,id):
     Student_info=Students.objects.get(id=id)
     if Student_info:
         context={
@@ -75,7 +75,7 @@ def Student(request,id):
 
 
 @login_required(login_url=login_url)
-def AddStudent(request):
+def add_student(request):
     # print(request.FILES)
     if request.method == "POST":
         form = StudentForm(request.POST,request.FILES)
@@ -91,7 +91,7 @@ def AddStudent(request):
     return render(request,'myapp2/add_student.html',context)
 
 @login_required(login_url="../"+login_url)
-def UpdateStudent(request,id):
+def update_student(request,id):
     print(request.FILES)
     try:
         data=Students.objects.get(id=id)
@@ -111,7 +111,7 @@ def UpdateStudent(request,id):
     return render(request,'myapp2/add_student.html',context)
 
 @login_required(login_url="../"+login_url)
-def DeleteStudent(request,id):
+def delete_student(request,id):
     data=Students.objects.get(id=id)
     context={}
     if data:
@@ -125,7 +125,7 @@ def DeleteStudent(request,id):
 
 
 
-def UserLogin(request):
+def user_login(request):
     # print(request.user.is_anonymous)
     if not request.user.is_anonymous:
         return redirect('../')
@@ -147,7 +147,7 @@ def UserLogin(request):
     return render(request,'myapp2/login.html',context)
 
 
-def logoutUser(request):
+def logout_user(request):
     
     if request.method=="POST":
         logout(request)

@@ -1,15 +1,15 @@
 from django.urls import path
-from .views import AllStudentsView, AddStudent ,Student ,UpdateStudent ,DeleteStudent ,UserLogin, logoutUser, user_register, search
+from .views import all_students_view, add_student ,student ,update_student ,delete_student ,user_login, logout_user, user_register, search
 
 
 urlpatterns = [
-    path("",AllStudentsView),
+    path("",all_students_view),
     path('search/',search),
-    path('add',AddStudent),
-    path('student/<str:id>',Student),
-    path('update/<str:id>',UpdateStudent,name='update'),
-    path('delete/<str:id>',DeleteStudent,name='delete'),
-    path('login-user/',UserLogin),
-    path('logout/',logoutUser,name='logout'),
+    path('add',add_student),
+    path('student/<str:id>',student),
+    path('update/<str:id>',update_student,name='update'),
+    path('delete/<str:id>',delete_student,name='delete'),
+    path('login-user/',user_login),
+    path('logout/',logout_user,name='logout'),
     path('register/',user_register,name="register")
 ]

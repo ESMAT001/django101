@@ -1,7 +1,8 @@
 def merge(a,b):
     c=[]
     i,j=0,0   
-    
+   #a=[1,2,3,10]
+   #b=[4,5,6]
     # -------- 1 -----------
     #      a=3   b=3
     # 1--- i=0   j=0      [1]
@@ -21,10 +22,10 @@ def merge(a,b):
     while i<len(a) and j<len(b):
         if a[i] < b[j]:
             c.append(a[i])
-            i+=1
+            i += 1
         else:
             c.append(b[j])
-            j+=1
+            j += 1
     
     if i == len(a):
         c += b[j:]
@@ -58,7 +59,7 @@ merge(a,b)
 lst=[1,4,2,10,3]
 
 
-mergeSort(lst)
+print(mergeSort(lst))
 
 
 
@@ -72,7 +73,7 @@ mergeSort(lst)
 
 from random import randint
 for _ in range(10):
-    random_list=[ randint(0,1000) for _ in range(1000)  ]
+    random_list=[ randint(0,1000) for _ in range(1500)  ]
     
 #     print(random_list)
     

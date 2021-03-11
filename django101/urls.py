@@ -19,8 +19,9 @@ from users import views as user_views
 from django.conf.urls.static import static
 from django.conf import settings
 urlpatterns = [
+    path('',include('reactDjango.urls')),
     path('admin/', admin.site.urls),
     path('myapp/',include('myapp.urls')),
-    path('',include('myapp2.urls')),
+    path('oldApp/',include('myapp2.urls')),
     path('register/',user_views.register,name="register"),
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
